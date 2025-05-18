@@ -1,0 +1,74 @@
+1:Customer Creation
+2:Customer Type: regular(default),gold, platinum
+2: Order Creation -> No payment ,assume payment is done when order placed
+3: promotion of customer: when 10 order placed promoted regular to gold, customer promted to platinum when 20 order placed
+4: based on customer type automically customer eligible to discount : percentage discoung:10% for gold , 20% from platinum
+5: intially customer did the full payment of order , discount amount should be safe, track the how much discount customer earned based on order and total also
+6:claim discount money back later
+7:
+
+
+Better code practices:
+clean standard Rest API
+database as per your chice
+junit test cases
+Exception Handling
+
+
+
+sent email async -> based on order number
+
+DB Entity:
+Customer :
+    custId : long
+    custName: String
+    customerType: REGULAR/GOLD/PREMIUM
+    createdDate: date
+    updatedDate: date
+
+AuditData
+auditId,custId, customerType, createdDate
+CustomerType
+REGULAR/GOLD/PREMIUM
+Order
+    orderId
+    custId
+    amount
+    createdDate
+    customerType
+    discountAmount
+    updatedDate
+
+OrderCount:
+    custId,
+    noOfOrder
+
+DiscountConfiguration
+    customerType
+    discountPercentage
+
+AuditNotification
+    custId
+    notificationType
+    msgContent
+    requestBody<Encoded>
+    responseBody<Encoded>
+    isSuccess
+    createdAt
+    updatedAt
+
+
+API:
+
+1:POST /v1/customer
+2:POST /v1/order
+3:GET /v1/order/{orderId}
+4: GET /v1/order/totalDiscount/earned/{orderId}
+4:POST /v1/order/discount/settlement
+
+
+Question: is user can upgrade the membership manually?
+Ans: No
+
+Event when 9 or 19 order reached  user Promotion msg need to send
+User Promotion when order 10 or 20 completed

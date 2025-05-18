@@ -1,0 +1,4 @@
+Install java 21 then set path:
+download link:https://www.oracle.com/in/java/technologies/downloads/#jdk21-mac
+akashgoyal@akashs-MacBook-Pro basic % export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home
+akashgoyal@akashs-MacBook-Pro basic % export PATH=$JAVA_HOME/bin:$PATH
