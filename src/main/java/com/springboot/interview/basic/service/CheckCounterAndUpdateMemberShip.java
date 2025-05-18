@@ -1,9 +1,12 @@
 package com.springboot.interview.basic.service;
 
+import com.springboot.interview.basic.entities.Customer;
 import com.springboot.interview.basic.entities.Order;
 import com.springboot.interview.basic.entities.OrderCount;
 import com.springboot.interview.basic.iservice.ICheckCounterAndUpdateMemberShip;
+import com.springboot.interview.basic.iservice.ICustomerService;
 import com.springboot.interview.basic.iservice.IEmailService;
+import com.springboot.interview.basic.pojo.CustomerType;
 import com.springboot.interview.basic.repositories.OrderCountRepository;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -15,11 +18,14 @@ public class CheckCounterAndUpdateMemberShip implements ICheckCounterAndUpdateMe
 
     private IEmailService emailService;
     private OrderCountRepository orderCountRepository;
+    private ICustomerService customerService;
 
 
-    public CheckCounterAndUpdateMemberShip(EmailService emailService,OrderCountRepository orderCountRepository){
+    public CheckCounterAndUpdateMemberShip(EmailService emailService,OrderCountRepository orderCountRepository,
+                                           CustomerService customerService){
         this.emailService=emailService;
         this.orderCountRepository=orderCountRepository;
+        this.customerService=customerService;
     }
 
     @Override
@@ -30,7 +36,13 @@ public class CheckCounterAndUpdateMemberShip implements ICheckCounterAndUpdateMe
        if(optionalOrderCount.isPresent()){
            OrderCount orderCount1=optionalOrderCount.get();
            String msg="";
-           if(orderCount1.getCounter()+1==9){
+           if(orderCount1.getCounter()+1==10 || orderCount1.getCounter()+1==20){
+               CustomerType customerType=  orderCount1.getCounter()+1==10?CustomerType.GOLD:CustomerType.PREMIUM;
+              Customer customer=  customerService.customer(custId).get();
+              customer.setCustomerType(customerType.toString());
+               customerService.customer(customer);
+           }
+           else if(orderCount1.getCounter()+1==9){
                msg= "You are 1 order away for gold membership";
                emailService.sendEmail(emailId,msg);
            }else if(orderCount1.getCounter()+1==19){

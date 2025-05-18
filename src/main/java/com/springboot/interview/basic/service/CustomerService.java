@@ -41,4 +41,9 @@ public class CustomerService implements ICustomerService {
     public Optional<Customer> customer(long custId) {
         return customerRepository.findById(custId);
     }
+
+    @Override
+    public Customer customer(Customer customer) {
+       return  customerRepository.save(customer);
+    }
 }

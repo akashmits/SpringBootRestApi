@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface ICustomerService {
     public Customer customer(CustomerPojo customer);
     public Optional<Customer> customer(long custId);
+    public Customer customer(Customer customer);
 }

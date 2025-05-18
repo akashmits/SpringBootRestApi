@@ -48,7 +48,8 @@ public class OrderedService implements IOrderedService {
         Order order = new Order();
         order.setCustomer(customer);
         order.setAmount(orderPojo.getAmount());
-        if (CustomerType.GOLD.equals(customer.getCustomerType())){
+        System.out.println(" Customer Type :"+customer.getCustomerType());
+        if (CustomerType.GOLD.name().equals(customer.getCustomerType())){
             order.setDiscountedAmount(Double.parseDouble(order.getAmount())*(.1)+"");
         }else if(CustomerType.PREMIUM.equals(customer.getCustomerType())){
             order.setDiscountedAmount(Double.parseDouble(order.getAmount())*(.2)+"");

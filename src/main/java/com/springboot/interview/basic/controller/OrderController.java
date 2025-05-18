@@ -24,8 +24,12 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody(required = true) OrderPojo orderPojo){
         System.out.println("Order Request Received :"+orderPojo);
-        Order order =orderedService.order(orderPojo);
-        return new ResponseEntity<>(order, HttpStatus.OK);
+        try {
+            Order order = orderedService.order(orderPojo);
+            return new ResponseEntity<>(order, HttpStatus.OK);
+        }catch(Exception ex){
+            throw ex;
+        }
     }
 
     @GetMapping
