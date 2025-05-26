@@ -1,0 +1,163 @@
+Requirement: we need to implement job scheduler ,
+1: we can submit job for scheduling and the jobs will be scheduled on different clusters based on the fact that
+the jobs infra requirement are fulfilled
+(lets say the job needs 100GB or has some CPU requirement etc)
+
+Also we can take job priority into account.
+
+followup: is we need to monitor the job finish timing also?
+yes : worker will notify when job will finihs
+
+
+if any changes happen in the resources we have received update
+
+on one cluster can we submit multiple jobs
+yes based on the resources we can submit multiple jobs
+
+on one core only one job will run?
+yes
+
+
+
+Strategy :
+
+BestFit based on memory
+BestFit based on memory and cpu
+LargeFit
+
+
+100GB, 1 cpu, P1 -> run this job
+
+P1, 600GB, 20CPU -> if we are not able to complete the job then?
+what action we need to take:
+like wait infinite time
+or wait for some time
+we can maintain the Queue for highpriority waiting job
+P2, 100GB, 4CPU
+
+
+Entity
+1:Problem Statement
+    1.1: Functional Requirement
+    1.2: Non Functional Requirement
+    1.3: Example
+2: Identifying key classes
+3: class Daigram
+4: Implementation
+5: Conclusion
+
+
+
+
+available resources:
+c1: 500GB,16CPU
+c2: 100GB, 12CPU
+
+
+
+
+1: Functional Req:
+       1.1:Cluster Resource management:
+             a: The system shold allow users to add clusters(along with their infrastructure configurations like CPU and memory)
+             b:Clusters can run multiple jobs simultaneously, provided they have enough availalbe resources to satisfy all the running jobs requiremnts.
+             c: Resources of a cluster should be allocated to a job for the entire duration of its execution
+    2: Job Submission:
+        a: The System should allow users to submit jobs with specific infrastructure requirements(CPU,RAM) and job priority
+        b: Each job will include the execution time, specifying how long the job will use the allocated resources
+    a:Submit Job
+        resources
+        priority
+    3: Job Scheduling:
+        a: The System Should dispatch jobs to clusters based on resource availability
+        b: jobs should be scheduled for a specific time duration(execution time).
+        c: Job Priority Should be considered when determining which job to run first in case of resource contention
+
+    b: Resource Management System
+
+    4: Job Execution and Completion:
+        a: The System Should start executing jobs on the assigned cluster as soon as they are dispatched
+        b: once a job completes its execution(after the specified time), the resouces should be freed up
+
+    c: finish job (fallback api: jobId: FINISH/PENDING)
+
+ 2: Non Functional Req:
+ Scalability:
+    a: the System should be able to handle a large number oc clusters and jobs
+    b: The System should efficiently manage resources when multiple jobs run concurrenlty on the same cluster
+ Concurrency:
+    a: The System must support running multiple jobs on the same cluster at the same time, ensuring resources contention is managed
+    b: Resource allocation should be thread safe to prevent over allocation
+
+ Latency:
+    a: Job Scheduling should be optimized to minimize the wait time before a job is scheduled and executed
+ a: System should be highly availalbe
+ b: System should be fault tolerance
+ c: System should be highly resouce utilize
+
+ Priority: 1 to 5 (High to low)
+           if system have not received the priority then default is 5 else based on that assign priority
+ Example:
+
+ 1:100GB, 1Core -> (generate Job Id) -> findout suitable cluster -> then submit
+                                      -> we received callback based on job id-> free the space
+
+ 2: 100GB, 1 Core, priority
+
+2: Identifying key classes
+
+SchedulerController -> submit job
+               /acknowledge sent
+               /submitJob
+               /status/{jobId}
+
+CallBackController
+            /status?jobId=12345?status=SUCCESS
+ScheduleService:
+            PriorityQueue
+            multiple ALGO : BestFit,Default
+Resources
+
+Cluster
+    clusterId
+    totalMemory
+    totalCPU
+    isActive
+    allotMemory
+    allotCPU
+
+ ClusterManager:
+
+Job
+    jobId
+    priorityJob
+    clusterId
+    resource: memory
+              cpu
+    status : WAITING/INITIATED/IN-PROGRESS/FAILED/SUCCESS
+    createdDate
+    updatedDate
+
+
+Health
+    clusterId
+    status : GREEN/RED/YELLOW
+    createdDate
+    updatedDate
+
+
+Process:
+Job Submission
+Resource Check
+Job Scheduling
+Job Execution
+Job Completion
+
+outcome
+
+
+article :https://medium.com/@choudharys710/lld-machine-coding-with-implementation-job-scheduling-system-batch-processing-5d9b394823e5
+
+
+
+
+
