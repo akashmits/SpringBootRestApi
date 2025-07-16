@@ -24,21 +24,14 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody(required = true) OrderPojo orderPojo){
         System.out.println("Order Request Received :"+orderPojo);
-        try {
-            Order order = orderedService.order(orderPojo);
-            return new ResponseEntity<>(order, HttpStatus.OK);
-        }catch(Exception ex){
-            throw ex;
-        }
+        Order order =orderedService.order(orderPojo);
+        return ResponseEntity.ok(order);
     }
 
     @GetMapping
     public ResponseEntity<Order> getOrder(@RequestParam(required = true) Long orderId){
-        Optional<Order> order = orderedService.order(orderId);
-        if(order.isPresent())
-        return new ResponseEntity<>(order.get(), HttpStatus.OK);
-        else
-            throw new OrderNotFound("Order Not found");
+
+        return  orderedService.order(orderId).map(ResponseEntity::ok).orElseThrow(()->new OrderNotFound("Order Not found"));
     }
 
 }

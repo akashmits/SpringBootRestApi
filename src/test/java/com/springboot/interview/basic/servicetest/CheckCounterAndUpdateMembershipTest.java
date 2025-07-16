@@ -7,6 +7,7 @@ import com.springboot.interview.basic.iservice.IEmailService;
 import com.springboot.interview.basic.pojo.CustomerType;
 import com.springboot.interview.basic.repositories.OrderCountRepository;
 import com.springboot.interview.basic.service.CheckCounterAndUpdateMemberShip;
+import org.aspectj.weaver.ast.Or;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,6 +44,23 @@ public class CheckCounterAndUpdateMembershipTest {
 
     @Test
     void testNewCustomerOrderCount() {
+        Long custId=10L;
+        String emailId= "newEmail@gmail.com";
+
+        when(orderCountRepository.findByCustId(custId)).thenReturn(Optional.empty());
+
+        checkCounterAndUpdateMemberShip.incrementCounterAndNotify(custId,emailId);
+        ArgumentCaptor<OrderCount> captor = ArgumentCaptor.forClass(OrderCount.class);
+
+        verify(orderCountRepository).save(captor.capture());
+        OrderCount orderCount = captor.getValue();
+
+        assert orderCount.getCustId().equals(custId);
+        assert orderCount.getCounter()==1L;
+
+    }
+    @Test
+    void testNewCustomerOrderCount1() {
         Long custId = 1L;
         String email = "test@example.com";
 

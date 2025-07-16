@@ -14,12 +14,12 @@ public class DiscountController {
 
     @GetMapping(path = "/total")
     public ResponseEntity<String>  getTotalDiscount(){
-        return new ResponseEntity<>("", HttpStatus.OK);
+        return  ResponseEntity.ok("");
     }
 
     @PostMapping(path = "/settlement")
     public ResponseEntity<String>  discountSettlement(){
 
-        return new ResponseEntity<>("", HttpStatus.OK);
+        return  ResponseEntity.ok("");
     }
 }

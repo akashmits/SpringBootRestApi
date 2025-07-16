@@ -20,31 +20,14 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<Customer> customer(@RequestBody  CustomerPojo customerPojo){
-        try {
-            // TODO : validation
             System.out.println("Request Received :"+customerPojo);
             Customer customer = customerService.customer(customerPojo);
-            return new ResponseEntity<>(customer, HttpStatus.OK);
-        } catch(Exception ex){
-            ex.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
-        }
+            return ResponseEntity.ok(customer);
     }
 
     @GetMapping
     public ResponseEntity<Customer> customer(Long custId){
-        try {
-            // TODO : validation
-            Optional<Customer> customer = customerService.customer(custId);
-
-            customer.ifPresent(customer1 ->{
-                throw new CustomerNotFound("Customer Not found");
-            });
-
-                return new ResponseEntity<>(customer.get(), HttpStatus.OK);
-
-        } catch(Exception ex){
-            return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
-        }
+        System.out.println("GetCustomer Request Received. CustId:"+custId);
+            return customerService.customer(custId).map(ResponseEntity::ok).orElseThrow(()->new CustomerNotFound("Customer Not found"));
     }
 }
